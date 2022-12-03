@@ -1,0 +1,188 @@
+{
+    "event": "2022",
+    "members": {
+      "229389": {
+        "global_score": 0,
+        "id": 229389,
+        "name": "klemen kobau",
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "get_star_ts": 1669930700,
+              "star_index": 104014
+            },
+            "2": {
+              "star_index": 106603,
+              "get_star_ts": 1669931517
+            }
+          },
+          "2": {
+            "1": {
+              "get_star_ts": 1669997254,
+              "star_index": 351345
+            },
+            "2": {
+              "get_star_ts": 1669997736,
+              "star_index": 353325
+            }
+          },
+          "3": {
+            "1": {
+              "get_star_ts": 1670065044,
+              "star_index": 554494
+            },
+            "2": {
+              "get_star_ts": 1670066793,
+              "star_index": 561715
+            }
+          }
+        },
+        "local_score": 14,
+        "stars": 6,
+        "last_star_ts": 1670066793
+      },
+      "241985": {
+        "id": 241985,
+        "name": "davidsenica",
+        "global_score": 0,
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "get_star_ts": 1669900900,
+              "star_index": 0
+            },
+            "2": {
+              "get_star_ts": 1669900990,
+              "star_index": 278
+            }
+          },
+          "2": {
+            "1": {
+              "star_index": 186545,
+              "get_star_ts": 1669961905
+            },
+            "2": {
+              "get_star_ts": 1669962235,
+              "star_index": 188099
+            }
+          },
+          "3": {
+            "1": {
+              "star_index": 501401,
+              "get_star_ts": 1670051189
+            },
+            "2": {
+              "get_star_ts": 1670051719,
+              "star_index": 503137
+            }
+          }
+        },
+        "local_score": 30,
+        "last_star_ts": 1670051719,
+        "stars": 6
+      },
+      "427349": {
+        "last_star_ts": 1670062890,
+        "stars": 6,
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "star_index": 28737,
+              "get_star_ts": 1669908666
+            },
+            "2": {
+              "get_star_ts": 1669909727,
+              "star_index": 32662
+            }
+          },
+          "2": {
+            "1": {
+              "star_index": 359663,
+              "get_star_ts": 1669999285
+            },
+            "2": {
+              "star_index": 363646,
+              "get_star_ts": 1670000282
+            }
+          },
+          "3": {
+            "1": {
+              "star_index": 538942,
+              "get_star_ts": 1670061382
+            },
+            "2": {
+              "get_star_ts": 1670062890,
+              "star_index": 545462
+            }
+          }
+        },
+        "local_score": 19,
+        "global_score": 0,
+        "name": "Blarc",
+        "id": 427349
+      },
+      "2419554": {
+        "name": "Rok Koleša",
+        "id": 2419554,
+        "global_score": 0,
+        "last_star_ts": 1670065695,
+        "stars": 6,
+        "local_score": 21,
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "get_star_ts": 1669930615,
+              "star_index": 103735
+            },
+            "2": {
+              "get_star_ts": 1669930796,
+              "star_index": 104304
+            }
+          },
+          "2": {
+            "1": {
+              "star_index": 188694,
+              "get_star_ts": 1669962361
+            },
+            "2": {
+              "star_index": 192949,
+              "get_star_ts": 1669963336
+            }
+          },
+          "3": {
+            "1": {
+              "star_index": 526162,
+              "get_star_ts": 1670058242
+            },
+            "2": {
+              "get_star_ts": 1670065695,
+              "star_index": 557229
+            }
+          }
+        }
+      },
+      "2570738": {
+        "global_score": 0,
+        "id": 2570738,
+        "name": "Bogatejc",
+        "local_score": 2,
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "get_star_ts": 1670008277,
+              "star_index": 390870
+            }
+          },
+          "2": {
+            "1": {
+              "get_star_ts": 1670009946,
+              "star_index": 396001
+            }
+          }
+        },
+        "last_star_ts": 1670009946,
+        "stars": 2
+      }
+    },
+    "owner_id": 427349
+  }

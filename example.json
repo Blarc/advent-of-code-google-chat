@@ -1,0 +1,26 @@
+{
+    "event": "2022",
+    "members": {
+      "229389": {
+        "global_score": 0,
+        "id": 229389,
+        "name": "klemen kobau",
+        "completion_day_level": {
+          "1": {
+            "1": {
+              "get_star_ts": 1669930700,
+              "star_index": 104014
+            },
+            "2": {
+              "star_index": 106603,
+              "get_star_ts": 1669931517
+            }
+          }
+        },
+        "local_score": 14,
+        "stars": 6,
+        "last_star_ts": 1670066793
+      }
+    },	
+    "owner_id": 427349
+  }
