@@ -45,8 +45,3 @@ jobs:
           # The message for the commit.
           # Default: 'Commit from GitHub Actions (name of the workflow)'
           message: '[ci] Update leaderboard json.'
-
-          # Arguments for the git pull command. By default, the action does not pull.
-          # Default: ''
-          pull: '--rebase'
-                      
