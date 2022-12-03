@@ -16,8 +16,8 @@ import (
 
 const aocUrl = "https://adventofcode.com/2022/leaderboard/private/view/427349.json"
 
-//go:embed full.json
-var aocMockJson string
+//go:embed saved.json
+var aocSavedJson string
 
 type Leaderboard struct {
 	Event   string            `json:"event"`
@@ -72,7 +72,7 @@ func googleChat(key string, token string, message string) {
 	log.Println(sb)
 }
 
-func aoc(sessionCookie string) Leaderboard {
+func aoc(sessionCookie string) string {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", aocUrl, nil)
@@ -93,21 +93,13 @@ func aoc(sessionCookie string) Leaderboard {
 	}
 
 	//Convert the body to type string
-	sb := string(body)
-
-	// Parse JSON
-	var leaderboard Leaderboard
-	err = json.Unmarshal([]byte(sb), &leaderboard)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return leaderboard
+	return string(body)
 }
 
-func aocMock() Leaderboard {
+func parseLeaderboard(leaderboardJson string) Leaderboard {
 
 	var leaderboard Leaderboard
-	err := json.Unmarshal([]byte(aocMockJson), &leaderboard)
+	err := json.Unmarshal([]byte(leaderboardJson), &leaderboard)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,16 +140,46 @@ func createMessage(leaderboard Leaderboard) string {
 	return result
 }
 
+func compareLeaderboards(a Leaderboard, b Leaderboard) bool {
+	// Same number of members
+	if len(a.Members) == len(b.Members) {
+		for memberKeyA := range a.Members {
+			if memberB, ok := b.Members[memberKeyA]; ok {
+				memberA := a.Members[memberKeyA]
+				// Same number of stars
+				if memberA.Stars != memberB.Stars {
+					return false
+				}
+			}
+		}
+	} else {
+		return false
+	}
+	return true
+}
+
 func main() {
 
 	key := os.Getenv("googleChatKey")
 	token := os.Getenv("googleChatToken")
 	sessionCookie := os.Getenv("sessionCookie")
 
-	leaderboard := aoc(sessionCookie)
-	message := createMessage(leaderboard)
+	newLeaderboardJson := aoc(sessionCookie)
+	leaderboard := parseLeaderboard(newLeaderboardJson)
+	savedLeaderboard := parseLeaderboard(aocSavedJson)
 
-	googleChat(key, token, message)
-	fmt.Println(message)
+	if !compareLeaderboards(savedLeaderboard, leaderboard) {
+
+		err := os.WriteFile("saved.json", []byte(newLeaderboardJson), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		message := createMessage(leaderboard)
+		googleChat(key, token, message)
+		log.Println(message)
+	} else {
+		log.Println("Leaderboard has not changed.")
+	}
 
 }
