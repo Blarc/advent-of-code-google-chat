@@ -130,9 +130,14 @@ func createMessage(leaderboard Leaderboard) string {
 		}
 
 		lastDay := member.Days[strconv.Itoa(len(member.Days))]
-		lastStarTimestamp := time.Unix(lastDay[strconv.Itoa(len(lastDay))].GetStarTs, 0).Format("(01-02 15:04)")
 
-		result += fmt.Sprintf("%1d) %3d %-25s %13s %s\n", i+1, member.LocalScore, stars, lastStarTimestamp, member.Name)
+		lastStarTimestamp := lastDay[strconv.Itoa(len(lastDay))].GetStarTs
+		loc, _ := time.LoadLocation("Europe/Ljubljana")
+		lastStarDateTime := time.Unix(lastStarTimestamp, 0).
+			In(loc).
+			Format("(01-02 15:04)")
+
+		result += fmt.Sprintf("%1d) %3d %-25s %13s %s\n", i+1, member.LocalScore, stars, lastStarDateTime, member.Name)
 
 	}
 
