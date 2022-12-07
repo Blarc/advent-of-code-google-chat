@@ -14,8 +14,6 @@ import (
 	"time"
 )
 
-const aocUrl = "https://adventofcode.com/2022/leaderboard/private/view/427349.json"
-
 //go:embed saved.json
 var aocSavedJson string
 
@@ -39,43 +37,36 @@ type Member struct {
 	LastStarTs  int                        `json:"last_star_ts"`
 }
 
-func googleChat(key string, token string, message string) {
+func sendMessageToGoogleChat(webhookUrl string, message string) {
 
-	webhookUrl := fmt.Sprintf("https://chat.googleapis.com/v1/spaces/AAAAoYQLvw0/messages?key=%s&token=%s", key, token)
-
-	//Encode the data
 	postBody, _ := json.Marshal(map[string]string{
 		"text": message,
 	})
 
 	requestBody := bytes.NewBuffer(postBody)
 
-	//Leverage Go's HTTP Post function to make request
 	resp, err := http.Post(
 		webhookUrl,
 		"application/json; charset=UTF-8",
 		requestBody,
 	)
 
-	//Handle Error
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
 	defer resp.Body.Close()
 
-	//Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	sb := string(body)
-	log.Println(sb)
+	log.Println(string(body))
 }
 
-func aoc(sessionCookie string) string {
+func getLeaderboard(leaderboardUrl string, sessionCookie string) string {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", aocUrl, nil)
+	req, err := http.NewRequest("GET", leaderboardUrl, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -86,13 +77,11 @@ func aoc(sessionCookie string) string {
 		log.Fatalln(err)
 	}
 
-	//We Read the response body on the line below.
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	//Convert the body to type string
 	return string(body)
 }
 
@@ -117,28 +106,55 @@ func createMessage(leaderboard Leaderboard) string {
 	})
 
 	var result string = "🎄Leadboard update🎄\n```\n"
+
+	loc, _ := time.LoadLocation("Europe/Ljubljana")
+
+	// Figure out how many AoC puzzles is currently available
+	today := time.Now().In(loc)
+	numberOfDays := 25
+	if today.Month() == time.December {
+		numberOfDays = today.Day()
+	}
+
+	// Find the length of the longest username
+	maxNameLength := 0
+	for _, member := range members {
+		memberNameLenght := len(member.Name)
+		if memberNameLenght > maxNameLength {
+			maxNameLength = memberNameLenght
+		}
+	}
+
 	for i, member := range members {
 
 		var stars string
-		for i := 0; i < len(member.Days); i++ {
-			numberOfStars := len(member.Days[strconv.Itoa(i+1)])
+		var lastDayNumber int
+		for day := 1; day <= numberOfDays; day++ {
+
+			dayString := strconv.Itoa(day)
+
+			numberOfStars := len(member.Days[dayString])
 			if numberOfStars == 2 {
 				stars += string('★')
+			} else if numberOfStars == 1 {
+				stars += string('✮')
 			} else {
 				stars += string('☆')
 			}
+
+			if _, ok := member.Days[dayString]; ok && day > lastDayNumber {
+				lastDayNumber = day
+			}
+
 		}
 
-		lastDay := member.Days[strconv.Itoa(len(member.Days))]
-
+		lastDay := member.Days[strconv.Itoa(lastDayNumber)]
 		lastStarTimestamp := lastDay[strconv.Itoa(len(lastDay))].GetStarTs
-		loc, _ := time.LoadLocation("Europe/Ljubljana")
 		lastStarDateTime := time.Unix(lastStarTimestamp, 0).
 			In(loc).
 			Format("(01-02 15:04)")
 
-		// TODO: Find longest name and use it to format
-		result += fmt.Sprintf("%1d) %s %-15s %4d %s\n", i+1, lastStarDateTime, member.Name, member.LocalScore, stars)
+		result += fmt.Sprintf("%1d) %s %-*s %4d %s\n", i+1, lastStarDateTime, maxNameLength, member.Name, member.LocalScore, stars)
 
 	}
 
@@ -166,11 +182,11 @@ func compareLeaderboards(a Leaderboard, b Leaderboard) bool {
 
 func main() {
 
-	key := os.Getenv("googleChatKey")
-	token := os.Getenv("googleChatToken")
+	leaderboardUrl := os.Getenv("leaderboardUrl")
 	sessionCookie := os.Getenv("sessionCookie")
+	googleChatUrl := os.Getenv("googleChatUrl")
 
-	newLeaderboardJson := aoc(sessionCookie)
+	newLeaderboardJson := getLeaderboard(leaderboardUrl, sessionCookie)
 	leaderboard := parseLeaderboard(newLeaderboardJson)
 	savedLeaderboard := parseLeaderboard(aocSavedJson)
 
@@ -182,7 +198,7 @@ func main() {
 		}
 
 		message := createMessage(leaderboard)
-		googleChat(key, token, message)
+		sendMessageToGoogleChat(googleChatUrl, message)
 		log.Println(message)
 	} else {
 		log.Println("Leaderboard has not changed.")

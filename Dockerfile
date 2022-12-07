@@ -7,7 +7,7 @@ WORKDIR $GOPATH/src/github.com/Blarc/aoc-bot
 COPY . .
 
 # Build the package
-RUN go build -o aoc .
+RUN go build -o main .
 
 # Run the executable
-CMD ["./aoc"]     
+CMD ["./main"]     

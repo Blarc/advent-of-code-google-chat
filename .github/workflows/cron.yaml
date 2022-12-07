@@ -14,13 +14,12 @@ jobs:
           go-version: 1.19
 
       - name: Build
-        run: go build -o aoc .
+        run: go build -o main .
 
       - name: Run
-        run: ./aoc
+        run: ./main
         env:
-          googleChatKey: ${{ secrets.GOOGLE_CHAT_KEY }}
-          googleChatToken: ${{ secrets.GOOGLE_CHAT_TOKEN }}
+          googleChatUrl: ${{ secrets.GOOGLE_CHAT_URL }}
           sessionCookie: ${{ secrets.SESSION_COOKIE }}
 
       - name: Add & Commit
