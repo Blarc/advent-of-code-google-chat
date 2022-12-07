@@ -113,7 +113,9 @@ func createMessage(leaderboard Leaderboard) string {
 	today := time.Now().In(loc)
 	numberOfDays := 25
 	if today.Month() == time.December {
-		numberOfDays = today.Day()
+		if today.Day() < 26 {
+			numberOfDays = today.Day()
+		}
 	}
 
 	// Find the length of the longest username
