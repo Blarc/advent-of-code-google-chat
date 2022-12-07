@@ -137,7 +137,8 @@ func createMessage(leaderboard Leaderboard) string {
 			In(loc).
 			Format("(01-02 15:04)")
 
-		result += fmt.Sprintf("%1d) %3d %-25s %13s %s\n", i+1, member.LocalScore, stars, lastStarDateTime, member.Name)
+		// TODO: Find longest name and use it to format
+		result += fmt.Sprintf("%1d) %s %-15s %4d %s\n", i+1, lastStarDateTime, member.Name, member.LocalScore, stars)
 
 	}
 
