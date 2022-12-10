@@ -95,7 +95,7 @@ func parseLeaderboard(leaderboardJson string) Leaderboard {
 	return leaderboard
 }
 
-func createMessage(leaderboard Leaderboard) string {
+func createMessage(leaderboard Leaderboard, changedMembers []Member) string {
 	members := make([]Member, 0, len(leaderboard.Members))
 	for _, member := range leaderboard.Members {
 		members = append(members, member)
@@ -105,7 +105,20 @@ func createMessage(leaderboard Leaderboard) string {
 		return members[i].LocalScore > members[j].LocalScore
 	})
 
-	var result string = "🎄Leadboard update🎄\n```\n"
+	var result string = "🎄Leadboard update🎄\n"
+	result += "⭐New stars: "
+
+	for i, member := range changedMembers {
+		if i == len(changedMembers)-1 {
+			result += member.Name
+		} else {
+			result += member.Name
+			result += ", "
+		}
+	}
+
+	result += "\n```\n"
+	result += "#  Last star     Username        Points Stars\n"
 
 	loc, _ := time.LoadLocation("Europe/Ljubljana")
 
@@ -164,7 +177,8 @@ func createMessage(leaderboard Leaderboard) string {
 	return result
 }
 
-func compareLeaderboards(a Leaderboard, b Leaderboard) bool {
+func compareLeaderboards(a Leaderboard, b Leaderboard) []Member {
+	changedMembers := []Member{}
 	// Same number of members
 	if len(a.Members) == len(b.Members) {
 		for memberKeyA := range a.Members {
@@ -172,14 +186,12 @@ func compareLeaderboards(a Leaderboard, b Leaderboard) bool {
 				memberA := a.Members[memberKeyA]
 				// Same number of stars
 				if memberA.Stars != memberB.Stars {
-					return false
+					changedMembers = append(changedMembers, memberA)
 				}
 			}
 		}
-	} else {
-		return false
 	}
-	return true
+	return changedMembers
 }
 
 func main() {
@@ -192,14 +204,15 @@ func main() {
 	leaderboard := parseLeaderboard(newLeaderboardJson)
 	savedLeaderboard := parseLeaderboard(aocSavedJson)
 
-	if !compareLeaderboards(savedLeaderboard, leaderboard) {
+	changedMembers := compareLeaderboards(savedLeaderboard, leaderboard)
+	if len(changedMembers) > 0 {
 
 		err := os.WriteFile("saved.json", []byte(newLeaderboardJson), 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		message := createMessage(leaderboard)
+		message := createMessage(leaderboard, changedMembers)
 		sendMessageToGoogleChat(googleChatUrl, message)
 		log.Println(message)
 	} else {
