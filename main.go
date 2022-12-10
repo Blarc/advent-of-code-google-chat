@@ -200,6 +200,18 @@ func main() {
 	sessionCookie := os.Getenv("sessionCookie")
 	googleChatUrl := os.Getenv("googleChatUrl")
 
+	if len(leaderboardUrl) == 0 {
+		panic("Environment variable \"leaderboardUrl\" is not set!")
+	}
+
+	if len(sessionCookie) == 0 {
+		panic("Environment variable \"sessionCookie\" is not set!")
+	}
+
+	if len(googleChatUrl) == 0 {
+		panic("Environment variable \"googleChatUrl\" is not set!")
+	}
+
 	newLeaderboardJson := getLeaderboard(leaderboardUrl, sessionCookie)
 	leaderboard := parseLeaderboard(newLeaderboardJson)
 	savedLeaderboard := parseLeaderboard(aocSavedJson)
