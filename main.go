@@ -177,18 +177,19 @@ func createMessage(leaderboard Leaderboard, changedMembers []Member) string {
 	return result
 }
 
-func compareLeaderboards(a Leaderboard, b Leaderboard) []Member {
+func compareLeaderboards(old Leaderboard, new Leaderboard) []Member {
 	changedMembers := []Member{}
-	// Same number of members
-	if len(a.Members) == len(b.Members) {
-		for memberKeyA := range a.Members {
-			if memberB, ok := b.Members[memberKeyA]; ok {
-				memberA := a.Members[memberKeyA]
-				// Same number of stars
-				if memberA.Stars != memberB.Stars {
-					changedMembers = append(changedMembers, memberA)
-				}
+	for memberKeyNew := range new.Members {
+		memberNew := new.Members[memberKeyNew]
+		memberOld, memberOldExists := old.Members[memberKeyNew]
+		if memberOldExists {
+			// If the number of stars has changed
+			if memberNew.Stars != memberOld.Stars {
+				changedMembers = append(changedMembers, memberNew)
 			}
+		} else {
+			// If the member does not yet exist
+			changedMembers = append(changedMembers, memberNew)
 		}
 	}
 	return changedMembers
