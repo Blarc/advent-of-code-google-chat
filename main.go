@@ -169,7 +169,7 @@ func createMessage(leaderboard Leaderboard, changedMembers []Member) string {
 			In(loc).
 			Format("(01-02 15:04)")
 
-		result += fmt.Sprintf("%1d) %s %-*s %4d %s\n", i+1, lastStarDateTime, maxNameLength, member.Name, member.LocalScore, stars)
+		result += fmt.Sprintf("%2d) %s %-*s %4d %s\n", i+1, lastStarDateTime, maxNameLength, member.Name, member.LocalScore, stars)
 
 	}
 
