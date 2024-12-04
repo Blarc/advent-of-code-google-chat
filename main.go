@@ -118,13 +118,13 @@ func createMessage(leaderboard Leaderboard, changedMembers []Member) string {
 	}
 
 	result += "\n```\n"
-	result += "#  Last star     Username        Points Stars\n"
+	result += "### Last star     Username        Points Stars\n"
 
 	loc, _ := time.LoadLocation("Europe/Ljubljana")
 
+	numberOfDays := 25
 	// Figure out how many AoC puzzles is currently available
 	today := time.Now().In(loc)
-	numberOfDays := 25
 	if today.Month() == time.December {
 		if today.Day() < 26 {
 			numberOfDays = today.Day()
@@ -142,35 +142,36 @@ func createMessage(leaderboard Leaderboard, changedMembers []Member) string {
 
 	for i, member := range members {
 
-		var stars string
-		var lastDayNumber int
-		for day := 1; day <= numberOfDays; day++ {
+		if member.Stars != 0 {
+			var stars string
+			var lastDayNumber int
+			for day := 1; day <= numberOfDays; day++ {
 
-			dayString := strconv.Itoa(day)
+				dayString := strconv.Itoa(day)
 
-			numberOfStars := len(member.Days[dayString])
-			if numberOfStars == 2 {
-				stars += string('★')
-			} else if numberOfStars == 1 {
-				stars += string('✮')
-			} else {
-				stars += string('☆')
+				numberOfStars := len(member.Days[dayString])
+				if numberOfStars == 2 {
+					stars += string('★')
+				} else if numberOfStars == 1 {
+					stars += string('✮')
+				} else {
+					stars += string('☆')
+				}
+
+				if _, ok := member.Days[dayString]; ok && day > lastDayNumber {
+					lastDayNumber = day
+				}
+
 			}
 
-			if _, ok := member.Days[dayString]; ok && day > lastDayNumber {
-				lastDayNumber = day
-			}
+			lastDay := member.Days[strconv.Itoa(lastDayNumber)]
+			lastStarTimestamp := lastDay[strconv.Itoa(len(lastDay))].GetStarTs
+			lastStarDateTime := time.Unix(lastStarTimestamp, 0).
+				In(loc).
+				Format("(01-02 15:04)")
 
+			result += fmt.Sprintf("%2d) %s %-*s %4d %s\n", i+1, lastStarDateTime, maxNameLength, member.Name, member.LocalScore, stars)
 		}
-
-		lastDay := member.Days[strconv.Itoa(lastDayNumber)]
-		lastStarTimestamp := lastDay[strconv.Itoa(len(lastDay))].GetStarTs
-		lastStarDateTime := time.Unix(lastStarTimestamp, 0).
-			In(loc).
-			Format("(01-02 15:04)")
-
-		result += fmt.Sprintf("%2d) %s %-*s %4d %s\n", i+1, lastStarDateTime, maxNameLength, member.Name, member.LocalScore, stars)
-
 	}
 
 	result += "```"
